@@ -23,7 +23,7 @@ spec:
   - name: revision
     value: '{{revision}}'
   - name: output-image
-    value: promtail:{{revision}}
+    value: quay.io/rhceph-dev/promtail:{{revision}}
   - name: build-platforms
     value:
     - linux/x86_64
