@@ -4,7 +4,8 @@ WORKDIR loki
 RUN make clean && make BUILD_IN_CONTAINER=false promtail
 
 
-FROM registry.redhat.io/ubi9/ubi-micro
+FROM registry.access.redhat.com/ubi9-minimal:latest
+
 # Standard Red Hat labels
 LABEL com.redhat.component="promtail-container"
 LABEL name="promtail"
@@ -22,3 +23,4 @@ COPY --from=builder /loki/clients/cmd/promtail/promtail /usr/bin/promtail
 COPY --from=builder /loki/clients/cmd/promtail/promtail-docker-config.yaml /etc/promtail/config.yml
 ENTRYPOINT ["/usr/bin/promtail"]
 CMD ["-config.file=/etc/promtail/config.yml"]
+
