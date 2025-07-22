@@ -1,20 +1,31 @@
-#FROM brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_9_golang_1.21 AS builder
-FROM quay.io/projectquay/golang:1.24 AS builder
-COPY loki loki
-WORKDIR loki
+ARG REMOTE_SOURCE=loki
+ARG REMOTE_SOURCE_DIR=/go/app
+
+FROM --platform=$BUILDPLATFORM quay.io/projectquay/golang:1.24 AS builder
+
+# Build Arguments
+ARG REMOTE_SOURCE
+ARG REMOTE_SOURCE_DIR
+
+COPY $REMOTE_SOURCE $REMOTE_SOURCE_DIR
+WORKDIR $REMOTE_SOURCE_DIR
 RUN make clean && make BUILD_IN_CONTAINER=false promtail
 
 
-FROM registry.redhat.io/ubi9/ubi-micro
-# Standard Red Hat labels
+FROM --platform=$BUILDPLATFORM registry.access.redhat.com/ubi9-minimal:latest
+
+# Build Arguments
+ARG REMOTE_SOURCE
+ARG REMOTE_SOURCE_DIR
+
 LABEL com.redhat.component="promtail-container"
 LABEL name="promtail"
-LABEL version="v3.0.0"
+LABEL version="v2.4.0"
 LABEL summary="Provides promtail container"
 LABEL io.k8s.display-name="Promtail container"
 LABEL maintainer="Guillaume Abrioux <gabrioux@redhat.com>"
 LABEL description="Responsible for gathering logs and sending them to Loki"
-COPY --from=builder go/loki/clients/cmd/promtail/promtail /usr/bin/promtail
-COPY --from=builder go/loki/clients/cmd/promtail/promtail-docker-config.yaml /etc/promtail/config.yml
+COPY --from=builder $REMOTE_SOURCE_DIR/clients/cmd/promtail/promtail /usr/bin/promtail
+COPY --from=builder $REMOTE_SOURCE_DIR/clients/cmd/promtail/promtail-docker-config.yaml /etc/promtail/config.yml
 ENTRYPOINT ["/usr/bin/promtail"]
 CMD ["-config.file=/etc/promtail/config.yml"]
