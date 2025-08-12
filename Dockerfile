@@ -20,7 +20,7 @@ ARG REMOTE_SOURCE_DIR
 
 LABEL com.redhat.component="promtail-container"
 LABEL name="promtail"
-LABEL version="v2.4.0"
+LABEL version="v3.5.3"
 LABEL summary="Provides promtail container"
 LABEL io.k8s.display-name="Promtail container"
 LABEL maintainer="Guillaume Abrioux <gabrioux@redhat.com>"
