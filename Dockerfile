@@ -1,5 +1,5 @@
 #FROM brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_9_golang_1.21 AS builder
-FROM quay.io/projectquay/golang:1.24 AS builder
+FROM quay.io/projectquay/golang:1.25 AS builder
 COPY loki loki
 WORKDIR loki
 RUN make clean && make BUILD_IN_CONTAINER=false promtail
