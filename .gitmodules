@@ -1,4 +1,4 @@
 [submodule "loki"]
 	path = loki
 	url = https://github.com/ibmstorage/loki.git
-	branch = release-8.1
+	branch = tmp_release-8.1
