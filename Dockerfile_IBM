@@ -1,0 +1,29 @@
+# Build stage 1
+ARG BASE_IMAGE=registry.redhat.io/ubi9/go-toolset:latest
+
+FROM --platform=$BUILDPLATFORM ${BASE_IMAGE} AS builder
+USER root
+ARG REMOTE_SOURCE_DIR
+COPY loki $REMOTE_SOURCE_DIR/loki
+WORKDIR $REMOTE_SOURCE_DIR/loki
+RUN make clean && make BUILD_IN_CONTAINER=false promtail
+
+FROM --platform=$BUILDPLATFORM registry.redhat.io/ubi9-minimal:latest
+ARG REMOTE_SOURCE_DIR
+# Standard Red Hat labels
+LABEL com.redhat.component="promtail-container"
+LABEL name="promtail"
+LABEL version="v3.5.3"
+LABEL summary="Provides promtail container"
+LABEL io.k8s.display-name="Promtail container"
+LABEL io.k8s.description="promtail-container"
+LABEL io.openshift.tags="rhceph ceph dashboard loki"
+LABEL maintainer="Guillaume Abrioux <gabrioux@redhat.com>"
+LABEL description="Responsible for gathering logs and sending them to Loki"
+LABEL cpe=cpe:/a:redhat:ceph_storage:9::el9
+LABEL org.opencontainers.image.created="${BUILD_DATE}"
+
+COPY --from=builder $REMOTE_SOURCE_DIR/loki/clients/cmd/promtail/promtail /usr/bin/promtail
+COPY --from=builder $REMOTE_SOURCE_DIR/loki/clients/cmd/promtail/promtail-docker-config.yaml /etc/promtail/config.yml
+ENTRYPOINT ["/usr/bin/promtail"]
+CMD ["-config.file=/etc/promtail/config.yml"]
