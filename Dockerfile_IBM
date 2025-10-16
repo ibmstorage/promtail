@@ -1,10 +1,15 @@
-FROM brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_9_golang_1.24 AS builder
-COPY loki loki
-WORKDIR loki
+# Build stage 1
+ARG BASE_IMAGE=registry.redhat.io/ubi9/go-toolset:latest
+
+FROM ${BASE_IMAGE} AS builder
+USER root
+ARG REMOTE_SOURCE_DIR
+COPY loki $REMOTE_SOURCE_DIR/loki
+WORKDIR $REMOTE_SOURCE_DIR/loki
 RUN make clean && make BUILD_IN_CONTAINER=false promtail
 
-
 FROM registry.redhat.io/ubi9-minimal:latest
+ARG REMOTE_SOURCE_DIR
 # Standard Red Hat labels
 LABEL com.redhat.component="promtail-container"
 LABEL name="promtail"
@@ -18,7 +23,7 @@ LABEL description="Responsible for gathering logs and sending them to Loki"
 LABEL cpe=cpe:/a:redhat:ceph_storage:9::el9
 LABEL org.opencontainers.image.created="${BUILD_DATE}"
 
-COPY --from=builder /loki/clients/cmd/promtail/promtail /usr/bin/promtail
-COPY --from=builder /loki/clients/cmd/promtail/promtail-docker-config.yaml /etc/promtail/config.yml
+COPY --from=builder $REMOTE_SOURCE_DIR/loki/clients/cmd/promtail/promtail /usr/bin/promtail
+COPY --from=builder $REMOTE_SOURCE_DIR/loki/clients/cmd/promtail/promtail-docker-config.yaml /etc/promtail/config.yml
 ENTRYPOINT ["/usr/bin/promtail"]
 CMD ["-config.file=/etc/promtail/config.yml"]
