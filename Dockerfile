@@ -15,7 +15,7 @@ LABEL io.k8s.description="promtail-container"
 LABEL io.openshift.tags="rhceph ceph dashboard loki"
 LABEL maintainer="Guillaume Abrioux <gabrioux@redhat.com>"
 LABEL description="Responsible for gathering logs and sending them to Loki"
-LABEL cpe=cpe:/a:redhat:ceph_storage:9::el9
+LABEL cpe=cpe:/a:redhat:ceph_storage:8::el9
 LABEL org.opencontainers.image.created="${BUILD_DATE}"
 
 COPY --from=builder /loki/clients/cmd/promtail/promtail /usr/bin/promtail
