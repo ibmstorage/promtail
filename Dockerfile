@@ -7,7 +7,7 @@ RUN make clean && make BUILD_IN_CONTAINER=false promtail
 FROM registry.redhat.io/ubi9-minimal:latest
 # Standard Red Hat labels
 LABEL com.redhat.component="promtail-container"
-LABEL name="promtail"
+LABEL name=rhceph/rhceph-promtail-rhel9
 LABEL version="v3.5.3"
 LABEL summary="Provides promtail container"
 LABEL io.k8s.display-name="Promtail container"
@@ -15,7 +15,7 @@ LABEL io.k8s.description="promtail-container"
 LABEL io.openshift.tags="rhceph ceph dashboard loki"
 LABEL maintainer="Guillaume Abrioux <gabrioux@redhat.com>"
 LABEL description="Responsible for gathering logs and sending them to Loki"
-LABEL cpe=cpe:/a:redhat:ceph_storage:9::el9
+LABEL cpe=cpe:/a:redhat:ceph_storage:7.1::el9
 LABEL org.opencontainers.image.created="${BUILD_DATE}"
 
 COPY --from=builder /loki/clients/cmd/promtail/promtail /usr/bin/promtail
