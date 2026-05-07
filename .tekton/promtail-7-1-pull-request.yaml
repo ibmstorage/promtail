@@ -17,6 +17,9 @@ metadata:
   name: promtail-7-1-on-pull-request
   namespace: ceph-tenant
 spec:
+  timeouts:
+    pipeline: 7h
+    tasks: 7h
   params:
   - name: git-url
     value: '{{source_url}}'
@@ -206,6 +209,7 @@ spec:
           value:
           - $(params.build-platforms)
       name: build-images
+      timeout: 7h
       params:
       - name: IMAGE
         value: $(params.output-image)
