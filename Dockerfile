@@ -17,6 +17,9 @@ LABEL maintainer="Guillaume Abrioux <gabrioux@redhat.com>"
 LABEL description="Responsible for gathering logs and sending them to Loki"
 LABEL cpe=cpe:/a:redhat:ceph_storage:7.1::el9
 
+# Z-stream indicator
+LABEL Z-VERSION="7.1z10"
+
 COPY --from=builder /loki/clients/cmd/promtail/promtail /usr/bin/promtail
 COPY --from=builder /loki/clients/cmd/promtail/promtail-docker-config.yaml /etc/promtail/config.yml
 ENTRYPOINT ["/usr/bin/promtail"]
