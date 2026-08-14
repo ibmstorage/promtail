@@ -24,8 +24,6 @@ spec:
     value: '{{source_url}}'
   - name: revision
     value: '{{revision}}'
-  - name: symlinkCheckIgnorePattern
-    value: "./loki/operator/website/.*"
   - name: output-image
     value: quay.io/rhceph-ci/promtail:v8.1-{{revision}}
   - name: build-platforms
