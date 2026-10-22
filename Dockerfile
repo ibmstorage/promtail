@@ -4,7 +4,7 @@ WORKDIR loki
 RUN make clean && make BUILD_IN_CONTAINER=false promtail
 
 
-FROM registry.access.redhat.com/ubi9-minimal:latest
+FROM registry.redhat.io/ubi9/ubi-minimal-pqc:latest
 
 # Standard Red Hat labels
 LABEL com.redhat.component="promtail-container"
