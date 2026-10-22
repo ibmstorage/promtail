@@ -8,7 +8,7 @@ COPY loki $REMOTE_SOURCE_DIR/loki
 WORKDIR $REMOTE_SOURCE_DIR/loki
 RUN make clean && make BUILD_IN_CONTAINER=false promtail
 
-FROM registry.redhat.io/ubi9-minimal:latest
+FROM registry.redhat.io/ubi9/ubi-minimal-pqc:latest
 ARG REMOTE_SOURCE_DIR
 # Standard Red Hat labels
 LABEL com.redhat.component="promtail-container"
