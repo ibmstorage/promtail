@@ -6,6 +6,10 @@ USER root
 ARG REMOTE_SOURCE_DIR
 COPY loki $REMOTE_SOURCE_DIR/loki
 WORKDIR $REMOTE_SOURCE_DIR/loki
+
+# libsystemd headers are required by github.com/coreos/go-systemd/sdjournal (CGO, journal target)
+RUN dnf install -y systemd-devel && dnf clean all
+
 RUN make clean && make BUILD_IN_CONTAINER=false promtail
 
 FROM registry.redhat.io/ubi9-minimal:latest
